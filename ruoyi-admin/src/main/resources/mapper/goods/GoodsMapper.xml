@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.goods.mapper.GoodsMapper">
+    
+    <resultMap type="Goods" id="GoodsResult">
+        <result property="id"    column="id"    />
+        <result property="goodsName"    column="goods_name"    />
+        <result property="goodsType"    column="goods_type"    />
+        <result property="goodsPrice"    column="goods_price"    />
+        <result property="goodsStock"    column="goods_stock"    />
+        <result property="goodsMainImg"    column="goods_main_img"    />
+        <result property="goodsImages"    column="goods_images"    />
+        <result property="goodsDetail"    column="goods_detail"    />
+        <result property="status"    column="status"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="remark"    column="remark"    />
+        <result property="delFlag"    column="del_flag"    />
+    </resultMap>
+
+    <sql id="selectGoodsVo">
+        select id, goods_name, goods_type, goods_price, goods_stock, goods_main_img, goods_images, goods_detail, status, create_by, create_time, update_by, update_time, remark, del_flag from tb_goods
+    </sql>
+
+    <select id="selectGoodsList" parameterType="Goods" resultMap="GoodsResult">
+        <include refid="selectGoodsVo"/>
+        <where>  
+            <if test="goodsName != null  and goodsName != ''"> and goods_name like concat('%', #{goodsName}, '%')</if>
+            <if test="goodsType != null  and goodsType != ''"> and goods_type = #{goodsType}</if>
+            <if test="goodsPrice != null "> and goods_price = #{goodsPrice}</if>
+            <if test="goodsStock != null "> and goods_stock = #{goodsStock}</if>
+            <if test="goodsMainImg != null  and goodsMainImg != ''"> and goods_main_img = #{goodsMainImg}</if>
+            <if test="goodsImages != null  and goodsImages != ''"> and goods_images = #{goodsImages}</if>
+            <if test="goodsDetail != null  and goodsDetail != ''"> and goods_detail = #{goodsDetail}</if>
+            <if test="status != null "> and status = #{status}</if>
+        </where>
+    </select>
+    
+    <select id="selectGoodsById" parameterType="Long" resultMap="GoodsResult">
+        <include refid="selectGoodsVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertGoods" parameterType="Goods" useGeneratedKeys="true" keyProperty="id">
+        insert into tb_goods
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="goodsName != null and goodsName != ''">goods_name,</if>
+            <if test="goodsType != null">goods_type,</if>
+            <if test="goodsPrice != null">goods_price,</if>
+            <if test="goodsStock != null">goods_stock,</if>
+            <if test="goodsMainImg != null">goods_main_img,</if>
+            <if test="goodsImages != null">goods_images,</if>
+            <if test="goodsDetail != null">goods_detail,</if>
+            <if test="status != null">status,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="remark != null">remark,</if>
+            <if test="delFlag != null">del_flag,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="goodsName != null and goodsName != ''">#{goodsName},</if>
+            <if test="goodsType != null">#{goodsType},</if>
+            <if test="goodsPrice != null">#{goodsPrice},</if>
+            <if test="goodsStock != null">#{goodsStock},</if>
+            <if test="goodsMainImg != null">#{goodsMainImg},</if>
+            <if test="goodsImages != null">#{goodsImages},</if>
+            <if test="goodsDetail != null">#{goodsDetail},</if>
+            <if test="status != null">#{status},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+         </trim>
+    </insert>
+
+    <update id="updateGoods" parameterType="Goods">
+        update tb_goods
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="goodsName != null and goodsName != ''">goods_name = #{goodsName},</if>
+            <if test="goodsType != null">goods_type = #{goodsType},</if>
+            <if test="goodsPrice != null">goods_price = #{goodsPrice},</if>
+            <if test="goodsStock != null">goods_stock = #{goodsStock},</if>
+            <if test="goodsMainImg != null">goods_main_img = #{goodsMainImg},</if>
+            <if test="goodsImages != null">goods_images = #{goodsImages},</if>
+            <if test="goodsDetail != null">goods_detail = #{goodsDetail},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteGoodsById" parameterType="Long">
+        delete from tb_goods where id = #{id}
+    </delete>
+
+    <delete id="deleteGoodsByIds" parameterType="String">
+        delete from tb_goods where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
